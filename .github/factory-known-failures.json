@@ -264,6 +264,12 @@
     "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
   },
   {
+    "file": "test/proxy-bridge-retry.test.cjs",
+    "name": "a bind that never succeeds is retried, then surfaced: spawn result, log.jsonl and the renderer",
+    "reason": "Windows temporary-directory cleanup fails with EBUSY.",
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+  },
+  {
     "file": "test/release-drop.test.cjs",
     "name": "ReleaseDrop grants allow-popups and nothing else",
     "reason": "Expected values to be strictly deep-equal:",
@@ -394,6 +400,12 @@
     "name": "filtered totals carry every field, not just output tokens",
     "reason": "The first session does not contain the expected input, output and cache totals.",
     "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512"
+  },
+  {
+    "file": "test/transcript-usage.test.cjs",
+    "name": "repeat reads with no change are stable",
+    "reason": "The original full equality assertion sees different values between consecutive reads.",
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938975454"
   },
   {
     "file": "test/transcript-usage.test.cjs",
