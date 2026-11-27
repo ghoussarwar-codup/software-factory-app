@@ -3,546 +3,623 @@
     "file": "test/agent-provider.test.cjs",
     "name": "copilot preset builds the documented non-interactive print-mode shape",
     "reason": "Expected the prompt flag -p, but the preset emitted -i.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-001"
   },
   {
     "file": "test/agent-token-cap.test.cjs",
     "name": "consecutive agent caps survive an interleaved config update",
     "reason": "office paths are not set: the host must call setOfficePaths() before the config or a store is read",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-002"
   },
   {
     "file": "test/agent-token-cap.test.cjs",
     "name": "invalid agent-cap IPC values cannot reach persisted config",
     "reason": "office paths are not set: the host must call setOfficePaths() before the config or a store is read",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-003"
   },
   {
     "file": "test/agent-token-cap.test.cjs",
     "name": "setting and clearing caps use the latest persisted map",
     "reason": "office paths are not set: the host must call setOfficePaths() before the config or a store is read",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-004"
   },
   {
     "file": "test/arabic-terminal.test.cjs",
     "name": "turning it off is a real undo, not a terminal rebuild",
     "reason": "the live switch must not dispose or recreate a terminal",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-005"
   },
   {
     "file": "test/arabic-ui.test.cjs",
     "name": "content direction in components is gated, never content-sniffed",
     "reason": "\"expected the PR's dir sites to be carried over, found 16\"",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-006"
   },
   {
     "file": "test/arabic-ui.test.cjs",
     "name": "every interpolation variable survives translation",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-007"
   },
   {
     "file": "test/arabic-ui.test.cjs",
     "name": "inline markup and array shapes are preserved",
     "reason": "\"Cannot read properties of undefined (reading 'length')\"",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-008"
   },
   {
     "file": "test/arabic-ui.test.cjs",
     "name": "no Arabic string is left as its English source",
     "reason": "11 Arabic strings are still English",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-009"
   },
   {
     "file": "test/auto-mode-sandbox.test.cjs",
     "name": "a Claude agent gets a native sandbox that still allows its agent dir and the hive root",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-010"
   },
   {
     "file": "test/breaker.test.cjs",
     "name": "per-agent cap still trips on work tokens, and the reason names the metric",
     "reason": "The cap message omits the expected total-token count.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512",
+    "id": "WIN-011"
   },
   {
     "file": "test/breaker.test.cjs",
     "name": "the floor-wide token budget still counts all kinds (only the per-agent arm changed)",
     "reason": "The breaker stays healthy after the configured floor-wide token budget is exceeded.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512",
+    "id": "WIN-012"
   },
   {
     "file": "test/bundled-fonts.test.cjs",
     "name": "the app HTML no longer reaches for Google, and its CSP forbids it",
     "reason": "The input did not match the regular expression /font-src 'self';/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-013"
   },
   {
     "file": "test/codex-remote.test.cjs",
     "name": "remote endpoint precedes both fresh and resumed Codex invocations",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-014"
   },
   {
     "file": "test/command-name-validation.test.cjs",
     "name": "pty.ts resolver validates before which/where",
     "reason": "the guard must precede the `which` interpolation",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-015"
   },
   {
     "file": "test/compact-latch.test.cjs",
     "name": "(a) fire() refuses an undeliverable agent BEFORE it enqueues",
     "reason": "The input did not match the regular expression /if \\(!canDeliverToAgent\\(a\\.status, ptyQuietMs\\(a\\.ptyId, now\\), QUIESCE_IDLE_MS\\)\\) continue;/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-016"
   },
   {
     "file": "test/engine-availability.test.cjs",
     "name": "the repro: grok, antigravity and qwen are offered by the wizard but cannot install",
     "reason": "grok",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-017"
   },
   {
     "file": "test/fs-path-containment.test.cjs",
     "name": "an in-workspace symlink to an in-workspace target is followed, not refused",
     "reason": "the link resolves to the canonical path of its target, not to the link",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-018"
   },
   {
     "file": "test/harness-home-tilde.test.cjs",
     "name": "readConfig serves a pre-fix config with every ~ expanded (the upgrade path)",
     "reason": "office paths are not set: the host must call setOfficePaths() before the config or a store is read",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-019"
   },
   {
     "file": "test/harness-home.test.cjs",
     "name": "writeConfig persists harnessHome EXPANDED, like registeredRepos",
     "reason": "office paths are not set: the host must call setOfficePaths() before the config or a store is read",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-020"
   },
   {
     "file": "test/hire-import.test.cjs",
     "name": "Command Center sets and clears one cap through the atomic IPC",
     "reason": "Command Center cap handler is present",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-021"
   },
   {
     "file": "test/hire-validator-parity.test.cjs",
     "name": "every runtime provider and allowlisted capability id passes the gallery validator",
     "reason": "MCP server terraform",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-022"
   },
   {
     "file": "test/hire-validator-parity.test.cjs",
     "name": "the published JSON schema reflects runtime providers and allowlists",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-023"
   },
   {
     "file": "test/hive-generated-docs.test.cjs",
     "name": "hive-service bootstrap refreshes generated hive docs",
     "reason": "bootstrapHiveServices() must refresh generated docs after ensuring the hive",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-024"
   },
   {
     "file": "test/hive-hook-node.test.cjs",
     "name": "every hook installer routes through the launcher — none left on bare node",
     "reason": "these hook commands would exit 127 wherever node is not on the bare PATH",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-025"
   },
   {
     "file": "test/hive-hook-node.test.cjs",
     "name": "the claude hook + statusLine commands run through the launcher",
     "reason": "Baseline assertion failed. See the linked test diagnostics.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-026"
   },
   {
     "file": "test/hive-nudge.test.cjs",
     "name": "the nudge keeps the pending inbox authoritative, not the id list",
     "reason": "The input did not match the regular expression /authoritative/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-027"
   },
   {
     "file": "test/hive-nudge.test.cjs",
     "name": "the nudge names the messages that prompted it",
     "reason": "The input did not match the regular expression /2026-08-19T17-10-00-000Z-broadcast-retro-rule/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-028"
   },
   {
     "file": "test/hive-pi-bootstrap.test.cjs",
     "name": "Pi fresh spawn receives exactly one positional hive bootstrap",
     "reason": "The expression evaluated to a falsy value:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-029"
   },
   {
     "file": "test/hive-task-mutation.test.cjs",
     "name": "atomic add is idempotent and delete removes only the named card",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-030"
   },
   {
     "file": "test/hive-task-mutation.test.cjs",
     "name": "patch refuses an unknown card without rewriting the ledger",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-031"
   },
   {
     "file": "test/hive-task-mutation.test.cjs",
     "name": "patching a stale UI card preserves a concurrently appended webhook card",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-032"
   },
   {
     "file": "test/hive-task-mutation.test.cjs",
     "name": "renderer task actions never send a whole stale ledger back to main",
     "reason": "The input did not match the regular expression /hivePatchTask\\s*\\(/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-033"
   },
   {
     "file": "test/hive-windows-prompt.test.cjs",
     "name": "protocol paths use native separators the agent can actually use",
     "reason": "Baseline assertion failed. See the linked test diagnostics.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-034"
   },
   {
     "file": "test/hive-windows-prompt.test.cjs",
     "name": "the Stop-hook drain text uses native separators too",
     "reason": "hive.drainForStop is not a function",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-035"
   },
   {
     "file": "test/mine-ignore-sync.test.cjs",
     "name": "MINE_IGNORE_LINES is identical in hive.ts and memory.ts",
     "reason": "MINE_IGNORE_LINES not found in src/main/hive.ts",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-036"
   },
   {
     "file": "test/model-catalog-remote.test.cjs",
     "name": "a remote provider replaces that list; the others keep the baked one",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-037"
   },
   {
     "file": "test/model-catalog-remote.test.cjs",
     "name": "the Claude-only surfaces read the overlay, not a snapshot",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-038"
   },
   {
     "file": "test/model-catalog-remote.test.cjs",
     "name": "the remote file and the baked file agree on every model",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-039"
   },
   {
     "file": "test/model-catalog-remote.test.cjs",
     "name": "the version filter still runs over remote entries",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-040"
   },
   {
     "file": "test/model-catalog.test.cjs",
     "name": "the pickers offer exactly the models the catalog names",
     "reason": "claude",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-041"
   },
   {
     "file": "test/pi-bridge.test.cjs",
     "name": "still constrains eight genuinely identical Pi calls",
     "reason": "Expected values to be strictly equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-042"
   },
   {
     "file": "test/provider-automation.test.cjs",
     "name": "the focus rides along only where the TUI parses it",
     "reason": "Expected values to be strictly equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-043"
   },
   {
     "file": "test/provider-config.test.cjs",
     "name": "model picker options stay provider-specific",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
-  },
-  {
-    "file": "test/proxy-bridge-retry.test.cjs",
-    "name": "a bind that never succeeds is retried, then surfaced: spawn result, log.jsonl and the renderer",
-    "reason": "Windows temporary-directory cleanup fails with EBUSY.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-044"
   },
   {
     "file": "test/release-drop.test.cjs",
     "name": "ReleaseDrop grants allow-popups and nothing else",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-046"
   },
   {
     "file": "test/release-notes.test.cjs",
     "name": "electron-builder points the release notes at a file that exists",
     "reason": "releaseInfo.releaseNotesFile is missing from electron-builder.yml",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-047"
   },
   {
     "file": "test/release-notes.test.cjs",
     "name": "the notes file we actually ship fits the toast",
     "reason": "Baseline assertion failed. See the linked test diagnostics.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-048"
   },
   {
     "file": "test/restart-terminal-preserve.test.cjs",
     "name": "a failed Restart & Continue keeps the pooled terminal, scrollback and label",
     "reason": "harness error (not a bug assertion): renderer payload threw: TypeError: window.cth.onPtyCliMissing is not a function",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-049"
   },
   {
     "file": "test/settings-one-save.test.cjs",
     "name": "API keys still save immediately: there is no staged value to hold",
     "reason": "the per-provider key save was removed",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-050"
   },
   {
     "file": "test/settings-one-save.test.cjs",
     "name": "Free Flow still saves immediately: it arms a global hotkey",
     "reason": "freeflow no longer persists on its own",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-051"
   },
   {
     "file": "test/settings-one-save.test.cjs",
     "name": "no integration was removed from Connections",
     "reason": "settings.connections.slack vanished from the Connections tab",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-052"
   },
   {
     "file": "test/settings-one-save.test.cjs",
     "name": "the divider between Connections sections is defined once too",
     "reason": "The input did not match the regular expression /const sectionRule = \\{/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-053"
   },
   {
     "file": "test/settings-one-save.test.cjs",
     "name": "the section heading is defined once, not written out seventeen times",
     "reason": "The input did not match the regular expression /const sectionHead = \\{/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-054"
   },
   {
     "file": "test/slack-stop-persist.test.cjs",
     "name": "slack:stop still actually stops the running server",
     "reason": "The source assertion could not find the expected server stop call.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-055"
   },
   {
     "file": "test/slack-timeout.test.cjs",
     "name": "downloadSlackFile arms a socket timeout (source check — index.ts imports electron)",
     "reason": "downloadSlackFile not found in src/main/index.ts",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-056"
   },
   {
     "file": "test/task-ledger.test.cjs",
     "name": "hive.writeTasks can still empty the ledger",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-057"
   },
   {
     "file": "test/telemetry-funnel.test.cjs",
     "name": "agent_spawn_attempted fires once per attempt, gated against the install relaunch",
     "reason": "The input did not match the regular expression /if \\(!opts\\.noAutoInstall\\) analytics\\.track\\('agent_spawn_attempted', \\{ provider \\}\\);/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-058"
   },
   {
     "file": "test/telemetry-funnel.test.cjs",
     "name": "the missing-CLI branch distinguishes installer-running, Mode 2, and spawn error",
     "reason": "The input did not match the regular expression /analytics\\.track\\('agent_install_started', \\{ provider, rung: rung\\.kind \\}\\);/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-059"
   },
   {
     "file": "test/telemetry-funnel.test.cjs",
     "name": "the real spawn reports both success and failure",
     "reason": "The input did not match the regular expression /if \\(res\\.ok\\) analytics\\.track\\('agent_spawned', \\{ provider \\}\\);/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-060"
   },
   {
     "file": "test/telemetry-message-count.test.cjs",
     "name": "steer is counted at the IPC seam, not inside control.steer",
     "reason": "The input did not match the regular expression /control\\.steer\\(agentId, text\\);\\n(?:\\s*\\/\\/.*\\n)*\\s*analytics\\.trackMessageSent\\('steer'\\);/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-061"
   },
   {
     "file": "test/telemetry-message-count.test.cjs",
     "name": "the composer counts its own submit, not the shared enqueue action",
     "reason": "Baseline assertion failed. See the linked test diagnostics.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-062"
   },
   {
     "file": "test/terminal-automation.test.cjs",
     "name": "an abandoned draft stops blocking delivery once it goes stale",
     "reason": "isStaleTerminalDraft is not a function",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-063"
   },
   {
     "file": "test/terminal-automation.test.cjs",
     "name": "the user owns the prompt for a long time before automation takes it",
     "reason": "Expected values to be strictly equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-064"
   },
   {
     "file": "test/terminal-link-activation.test.cjs",
     "name": "the URL branch opens only through the guarded opener, and only once",
     "reason": "the openExternal call is not behind a modifier gate",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-065"
   },
   {
     "file": "test/transcript-usage.test.cjs",
     "name": "a record with no sessionId lands only in the unfiltered total",
     "reason": "The session-filtered total is zero instead of 100 tokens.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512",
+    "id": "WIN-066"
   },
   {
     "file": "test/transcript-usage.test.cjs",
     "name": "filtered totals carry every field, not just output tokens",
     "reason": "The first session does not contain the expected input, output and cache totals.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512"
-  },
-  {
-    "file": "test/transcript-usage.test.cjs",
-    "name": "repeat reads with no change are stable",
-    "reason": "The original full equality assertion sees different values between consecutive reads.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938975454"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512",
+    "id": "WIN-067"
   },
   {
     "file": "test/transcript-usage.test.cjs",
     "name": "sessionId filter sums only that session, incrementally too",
     "reason": "The same-file fixture returns zero instead of 100 tokens for the first session.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512",
+    "id": "WIN-069"
   },
   {
     "file": "test/update-applied.test.cjs",
     "name": "the manual-download breadcrumb matches the URL the badge actually opens",
     "reason": "updater.ts no longer logs the manual download — 0.4.6 via loses the manual path",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-070"
   },
   {
     "file": "test/update-applied.test.cjs",
     "name": "updater.ts still emits the exact lines via reads",
     "reason": "updater.ts no longer logs \"update downloaded: <version>\" — update analytics.ts LOG_DOWNLOADED",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-071"
   },
   {
     "file": "test/update-badge-acknowledgement.test.cjs",
     "name": "the acknowledgement renders and auto-dismisses",
     "reason": "the acknowledgement popover must render when checkedOk is set",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-072"
   },
   {
     "file": "test/update-badge-acknowledgement.test.cjs",
     "name": "the check branch acknowledges a no-update result",
     "reason": "the manual check must set the acknowledgement, or a successful check stays silent",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-073"
   },
   {
     "file": "test/update-state.test.cjs",
     "name": "a staged update offers the restart, and names the version it installs",
     "reason": "Expected values to be strictly equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-074"
   },
   {
     "file": "test/update-state.test.cjs",
     "name": "an available update offers the download, not the restart",
     "reason": "Expected values to be strictly equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-075"
   },
   {
     "file": "test/update-state.test.cjs",
     "name": "clampPercent keeps progress renderable",
     "reason": "clampPercent is not a function",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-076"
   },
   {
     "file": "test/update-state.test.cjs",
     "name": "every actionable state offers the action its label promises",
     "reason": "action for available",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-077"
   },
   {
     "file": "test/update-state.test.cjs",
     "name": "failures reach Settings verbatim, same as the tooltip",
     "reason": "The input did not match the regular expression /win-portable/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-078"
   },
   {
     "file": "test/update-state.test.cjs",
     "name": "labels name the version so the badge is self-explanatory",
     "reason": "The \"string\" argument must be of type string. Received type object (null)",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-079"
   },
   {
     "file": "test/update-state.test.cjs",
     "name": "manual update with a direct installer reads as a download, not a page to hunt on",
     "reason": "The \"string\" argument must be of type string. Received type object (null)",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-080"
   },
   {
     "file": "test/update-state.test.cjs",
     "name": "the pipeline moves forward for the same version",
     "reason": "Expected values to be strictly equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-081"
   },
   {
     "file": "test/update-state.test.cjs",
     "name": "the two mid-flight states have no button to press",
     "reason": "Expected values to be strictly equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-082"
   },
   {
     "file": "test/update-state.test.cjs",
     "name": "the underlying failure reaches the tooltip instead of being swallowed",
     "reason": "The input did not match the regular expression /ENOTFOUND github\\.com/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-083"
   },
   {
     "file": "test/worker-launch.test.cjs",
     "name": "a multi-token auto flag appends whole, and the stance check is by token",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-084"
   },
   {
     "file": "test/worker-launch.test.cjs",
     "name": "a provider whose preset declares no auto flag gets nothing appended",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-085"
   },
   {
     "file": "test/worker-launch.test.cjs",
     "name": "provider-only resolution honors providers whose auto-mode stance is config-based",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-086"
   },
   {
     "file": "test/worker-wake-stall.test.cjs",
     "name": "a hook-only engine whose hooks show no turn since the mail landed is stalled and nudged every cooldown",
     "reason": "Expected values to be strictly equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-087"
   },
   {
     "file": "test/worktree-deps.test.cjs",
     "name": "leaves a dangling worktree dependency symlink untouched",
     "reason": "Expected values to be strictly equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-088"
   },
   {
     "file": "test/worktree-deps.test.cjs",
     "name": "removes only the linked dependencies before checking worktree status",
     "reason": "the unignored link makes the worktree dirty",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-089"
   },
   {
     "file": "test/worktree-deps.test.cjs",
     "name": "reports a failed link without throwing",
     "reason": "The input did not match the regular expression /EEXIST|ENOTDIR/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-090"
   },
   {
     "file": "test/worktree-deps.test.cjs",
     "name": "wires dependency linking into successful isolated worktree creation",
     "reason": "The input did not match the regular expression /await linkWorktreeDeps\\(origCwd, wtPath\\)/. Input:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-091"
   }
 ]
