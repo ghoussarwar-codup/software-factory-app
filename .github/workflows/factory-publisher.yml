@@ -1,23 +1,8 @@
-name: Factory publisher
+name: Factory publisher split bootstrap
 
 on:
   push:
     branches: [bootstrap/publisher]
-  workflow_dispatch:
-    inputs:
-      candidate:
-        description: Commit SHA of the reviewed candidate
-        required: true
-        type: string
-      tree:
-        description: Tree SHA approved for publication
-        required: true
-        type: string
-      branch:
-        description: Bot branch (bot/<name>)
-        required: true
-        type: string
-
 permissions:
   contents: read
   pull-requests: read
@@ -30,8 +15,7 @@ jobs:
   publish:
     if: >-
       github.repository == 'ghoussarwar-codup/software-factory-app' &&
-      ((github.event_name == 'push' && github.ref == 'refs/heads/bootstrap/publisher') ||
-       (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'))
+      github.event_name == 'push' && github.ref == 'refs/heads/bootstrap/publisher'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: publisher
@@ -44,35 +28,20 @@ jobs:
       - name: Validate candidate and base
         id: candidate
         shell: bash
-        env:
-          REQUESTED_CANDIDATE: ${{ inputs.candidate }}
-          REQUESTED_TREE: ${{ inputs.tree }}
-          REQUESTED_BRANCH: ${{ inputs.branch }}
         run: |
           set -euo pipefail
+          base=2f97b7b802c6cdaebcb1b39c7a9c60a597f7d39b
+          candidate=e9c04c60351ea03c41aed65954b0330dfb961572
+          tree=ecfe3d3fb26d8dfe5a6b84e8e4ce3dee31dab6c1
+          branch=bot/factory-publisher-split
           git fetch --no-tags --depth=1 origin refs/heads/main
-          base=$(git rev-parse FETCH_HEAD)
-          if [[ "$GITHUB_EVENT_NAME" == push ]]; then
-            [[ "$base" == 6da823adc487993e26c7a844a6872532839253c3 ]]
-            git read-tree "$base"
-            git update-index --force-remove -- .github/workflows/factory-baseline-evidence.yml .github/workflows/pr-evidence.yml test/pr-evidence-gate.test.cjs
-            tree=$(git write-tree)
-            branch=bot/factory-workflow-cleanup
-            expected=$'D\t.github/workflows/factory-baseline-evidence.yml\nD\t.github/workflows/pr-evidence.yml\nD\ttest/pr-evidence-gate.test.cjs'
-            [[ "$(git diff --name-status "$base" "$tree")" == "$expected" ]]
-          else
-            candidate="$REQUESTED_CANDIDATE"
-            tree="$REQUESTED_TREE"
-            branch="$REQUESTED_BRANCH"
-            [[ "$candidate" =~ ^[0-9a-f]{40}$ && "$tree" =~ ^[0-9a-f]{40}$ ]]
-            git fetch --no-tags --depth=2 origin "$candidate"
-            [[ "$(git rev-parse FETCH_HEAD)" == "$candidate" ]]
-            [[ "$(git rev-parse "$candidate^{tree}")" == "$tree" ]]
-            [[ "$(git rev-parse "$candidate^")" == "$base" ]]
-            git diff --quiet "$base" "$candidate" -- .github/workflows
-          fi
-          [[ "$branch" =~ ^bot/[a-z0-9][a-z0-9-]{0,60}$ ]]
-          git check-ref-format "refs/heads/$branch"
+          [[ "$(git rev-parse FETCH_HEAD)" == "$base" ]]
+          git fetch --no-tags --depth=2 origin "$candidate"
+          [[ "$(git rev-parse FETCH_HEAD)" == "$candidate" ]]
+          [[ "$(git rev-parse "$candidate^")" == "$base" ]]
+          [[ "$(git rev-parse "$candidate^{tree}")" == "$tree" ]]
+          expected=$'D\t.github/workflows/contributor-role.yml\nD\t.github/workflows/contributors.yml\nM\t.github/workflows/factory-publisher.yml'
+          [[ "$(git diff --name-status "$base" "$candidate")" == "$expected" ]]
           {
             printf 'base=%s\n' "$base"
             printf 'tree=%s\n' "$tree"
@@ -89,7 +58,7 @@ jobs:
           repositories: software-factory-app
           permission-contents: write
           permission-pull-requests: write
-          permission-workflows: ${{ github.event_name == 'push' && 'write' || '' }}
+          permission-workflows: write
 
       - name: Publish verified tree and open pull request
         shell: bash
@@ -137,10 +106,10 @@ jobs:
             title='Publish reviewed Factory candidate'
             body="Published by the Factory GitHub App from a reviewed tree. Base: $REVIEWED_BASE. Tree: $REVIEWED_TREE."
             if [[ "$GITHUB_EVENT_NAME" == push ]]; then
-              title='Remove one-off and upstream visual-evidence workflows'
+              title='Split routine and protected workflow publication'
               body="$body
 
-          Removes the one-off baseline evidence workflow and the inherited pull_request_target visual-evidence workflow. The routine publisher and required Factory CI workflow are unchanged. Fresh Factory CI and human approval are required."
+          Routine publication runs from main with its own Contents and Pull requests-only app. Workflow changes require the existing protected publisher environment and temporary Workflows write. Bot PR branches are single-use. The inherited contributor workflows are removed: attribution remains in Git history and CONTRIBUTORS.md, and the upstream Discord role has no Factory requirement."
             fi
             number=$(gh api --method POST "repos/$repository/pulls" -f "head=$BOT_BRANCH" -f base=main -f "title=$title" -f "body=$body" --jq .number)
           fi
