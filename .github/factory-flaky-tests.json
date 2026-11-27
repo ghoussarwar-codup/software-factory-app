@@ -1,0 +1,18 @@
+[
+  {
+    "file": "test/proxy-bridge-retry.test.cjs",
+    "name": "a bind that never succeeds is retried, then surfaced: spawn result, log.jsonl and the renderer",
+    "reason": "Windows temporary-directory cleanup fails with EBUSY.",
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886",
+    "id": "WIN-045",
+    "owner": "Factory CI maintainer"
+  },
+  {
+    "file": "test/transcript-usage.test.cjs",
+    "name": "repeat reads with no change are stable",
+    "reason": "The original full equality assertion sees different values between consecutive reads.",
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938975454",
+    "id": "WIN-068",
+    "owner": "Desktop runtime maintainer"
+  }
+]

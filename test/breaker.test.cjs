@@ -18,24 +18,9 @@
  */
 
 const assert = require('node:assert');
-const fs = require('node:fs');
-const os = require('node:os');
-const path = require('node:path');
-const ts = require('typescript');
+const { CircuitBreaker } = require('./load-ts.cjs')('src/main/breaker.ts');
 
-const SRC = path.join(__dirname, '..', 'src', 'main', 'breaker.ts');
-const out = fs.mkdtempSync(path.join(os.tmpdir(), 'breaker-'));
-const js = ts.transpileModule(fs.readFileSync(SRC, 'utf8'), {
-  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 }
-}).outputText;
-fs.writeFileSync(path.join(out, 'breaker.js'), js, 'utf8');
-const { CircuitBreaker } = require(path.join(out, 'breaker.js'));
-
-let failures = 0;
-function test(name, fn) {
-  try { fn(); console.log(`  ok  ${name}`); }
-  catch (e) { failures++; console.error(`FAIL  ${name}\n      ${e.message}`); }
-}
+const test = require('node:test');
 
 /** A breaker with fixed config (no caps, hardStop off). */
 function makeBreaker(over = {}) {
@@ -447,5 +432,3 @@ test('a healthy beat de-escalates one level', () => {
   const d = beat(b, 'a', null, true, T0 + BEAT);
   assert.equal(d.state.level, 'healthy');
 });
-
-process.exit(failures ? 1 : 0);

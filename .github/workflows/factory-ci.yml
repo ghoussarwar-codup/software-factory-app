@@ -1,0 +1,78 @@
+name: Factory CI
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: factory-ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    timeout-minutes: 15
+    name: Factory CI - ${{ matrix.candidate }}
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - candidate: PR head
+            sha: ${{ github.event.pull_request.head.sha }}
+          - candidate: Combined commit
+            sha: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ matrix.sha }}
+          persist-credentials: false
+      - name: Verify checked-out commit
+        shell: pwsh
+        env:
+          EXPECTED_SHA: ${{ matrix.sha }}
+        run: |
+          $actual = git rev-parse HEAD
+          if ($LASTEXITCODE -ne 0 -or $actual -ne $env:EXPECTED_SHA) {
+            throw 'Checked-out commit does not match the expected candidate.'
+          }
+          Write-Host "Testing commit $actual"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Lint changed JavaScript files
+        shell: pwsh
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git fetch --no-tags --depth=1 origin $env:BASE_SHA
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $scripts = git diff --name-only --diff-filter=ACMR $env:BASE_SHA HEAD -- '*.js' '*.cjs' '*.mjs'
+          if ($scripts) {
+            npx --yes eslint@9.39.1 --config .github/factory-eslint.config.mjs -- $scripts
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+      - name: Check formatting and whitespace
+        shell: pwsh
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git diff --check $env:BASE_SHA HEAD
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $tooling = git diff --name-only --diff-filter=ACMR $env:BASE_SHA HEAD -- '.github/factory-*' '.github/workflows/factory-ci.yml' 'tools/factory-*.cjs'
+          if ($tooling) {
+            npx --yes prettier@3.6.2 --check --single-quote --trailing-comma none --end-of-line auto -- $tooling
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+      - name: Install dependencies
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit and integration tests
+        env:
+          FACTORY_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: node tools/factory-test-gate.cjs
