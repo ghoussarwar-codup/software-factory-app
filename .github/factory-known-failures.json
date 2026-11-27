@@ -235,12 +235,6 @@
   },
   {
     "file": "test/pi-bridge.test.cjs",
-    "name": "generated Pi bridge preserves tool identity and breaker semantics",
-    "reason": "1 subtest failed",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
-  },
-  {
-    "file": "test/pi-bridge.test.cjs",
     "name": "still constrains eight genuinely identical Pi calls",
     "reason": "Expected values to be strictly equal:",
     "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
@@ -255,18 +249,6 @@
     "file": "test/provider-config.test.cjs",
     "name": "model picker options stay provider-specific",
     "reason": "Expected values to be strictly deep-equal:",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
-  },
-  {
-    "file": "test/proxy-bridge-retry.test.cjs",
-    "name": "a bind that fails once and then succeeds leaves the agent fully proxied",
-    "reason": "Baseline assertion failed. See the linked test diagnostics.",
-    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
-  },
-  {
-    "file": "test/proxy-bridge-retry.test.cjs",
-    "name": "a bind that never succeeds is retried, then surfaced: spawn result, log.jsonl and the renderer",
-    "reason": "Baseline assertion failed. See the linked test diagnostics.",
     "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
   },
   {

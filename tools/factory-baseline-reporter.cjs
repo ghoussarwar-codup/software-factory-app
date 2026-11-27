@@ -10,9 +10,15 @@ module.exports = async function* report(source) {
     const error = details.error;
     if (error.failureType === 'subtestsFailed') continue;
 
-    const relativeFile = file ? path.relative(process.cwd(), file).split(path.sep).join('/') : null;
-    const fileFailure = !relativeFile || path.basename(name) === path.basename(relativeFile);
-    const reason = (error.cause?.message || error.message).split(/\r?\n/).find(line => line.trim());
-    yield JSON.stringify({ file: relativeFile, name, reason, fileFailure }) + '\n';
+    const relativeFile = file
+      ? path.relative(process.cwd(), file).split(path.sep).join('/')
+      : null;
+    const fileFailure =
+      !relativeFile || path.basename(name) === path.basename(relativeFile);
+    const reason = (error.cause?.message || error.message)
+      .split(/\r?\n/)
+      .find((line) => line.trim());
+    yield JSON.stringify({ file: relativeFile, name, reason, fileFailure }) +
+      '\n';
   }
 };

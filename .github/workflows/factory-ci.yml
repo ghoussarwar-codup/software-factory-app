@@ -14,6 +14,7 @@ concurrency:
 
 jobs:
   verify:
+    timeout-minutes: 15
     name: Factory CI - ${{ matrix.candidate }}
     runs-on: windows-2022
     strategy:
@@ -43,18 +44,28 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Check changed files for whitespace and JavaScript syntax
+      - name: Lint changed JavaScript files
         shell: pwsh
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           git fetch --no-tags --depth=1 origin $env:BASE_SHA
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $scripts = git diff --name-only --diff-filter=ACMR $env:BASE_SHA HEAD -- '*.js' '*.cjs' '*.mjs'
+          if ($scripts) {
+            npx --yes eslint@9.39.1 --config .github/factory-eslint.config.mjs -- $scripts
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+      - name: Check formatting and whitespace
+        shell: pwsh
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
           git diff --check $env:BASE_SHA HEAD
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          $scripts = git diff --name-only --diff-filter=ACMR $env:BASE_SHA HEAD -- '*.js' '*.cjs' '*.mjs'
-          foreach ($script in $scripts) {
-            node --check $script
+          $tooling = git diff --name-only --diff-filter=ACMR $env:BASE_SHA HEAD -- '.github/factory-*' '.github/workflows/factory-ci.yml' 'tools/factory-*.cjs'
+          if ($tooling) {
+            npx --yes prettier@3.6.2 --check --single-quote --trailing-comma none -- $tooling
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
       - name: Install dependencies

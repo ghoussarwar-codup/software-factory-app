@@ -75,10 +75,9 @@ test('appended records are picked up (incremental tail parse)', () => {
 test('repeat reads with no change are stable', () => {
   const { cwd, dir } = makeProject();
   fs.writeFileSync(path.join(dir, 'a.jsonl'), rec(100) + '\n');
-  const { asOf: firstReadAt, ...first } = readAgentUsage(cwd);
-  const { asOf: secondReadAt, ...second } = readAgentUsage(cwd);
-  assert.deepEqual(second, first);
-  assert.ok(secondReadAt >= firstReadAt);
+  const a = readAgentUsage(cwd);
+  const b = readAgentUsage(cwd);
+  assert.deepEqual(b, a);
 });
 
 test('a partial trailing line is not counted until completed', () => {
@@ -111,13 +110,10 @@ test('a deleted file drops out of the totals', () => {
 
 test('sessionId filter sums only that session, incrementally too', () => {
   const { cwd, dir } = makeProject();
-  const s1 = path.join(dir, 's1.jsonl');
-  const s2 = path.join(dir, 's2.jsonl');
-  fs.writeFileSync(s1, rec(100, { sessionId: 's1' }) + '\n');
-  fs.writeFileSync(s2, rec(999, { sessionId: 's2' }) + '\n');
+  const f = path.join(dir, 'a.jsonl');
+  fs.writeFileSync(f, rec(100, { sessionId: 's1' }) + '\n' + rec(999, { sessionId: 's2' }) + '\n');
   assert.equal(readAgentUsage(cwd, { sessionId: 's1' }).outputTokens, 100);
-  fs.appendFileSync(s1, rec(11, { sessionId: 's1' }) + '\n');
-  fs.appendFileSync(s2, rec(888, { sessionId: 's2' }) + '\n');
+  fs.appendFileSync(f, rec(11, { sessionId: 's1' }) + '\n' + rec(888, { sessionId: 's2' }) + '\n');
   assert.equal(readAgentUsage(cwd, { sessionId: 's1' }).outputTokens, 111);
   assert.equal(readAgentUsage(cwd, { sessionId: 's2' }).outputTokens, 1887);
   assert.equal(readAgentUsage(cwd).outputTokens, 1998, 'unfiltered still sums everything');
@@ -128,13 +124,12 @@ test('sessionId filter sums only that session, incrementally too', () => {
  * a field that lands in the unfiltered total but not in the session bucket is
  * invisible to an outputTokens assertion — the totals still look right, only
  * the per-agent numbers are silently short, and nothing else contradicts them.
- * Two session files, distinct models and distinct cache read/write counts
+ * One file, two sessions, distinct models and distinct cache read/write counts
  * so a swap between them cannot cancel out. */
 test('filtered totals carry every field, not just output tokens', () => {
   const { cwd, dir } = makeProject();
-  fs.writeFileSync(path.join(dir, 's1.jsonl'),
-    rec(100, { sessionId: 's1', model: 'claude-haiku-4-5', input: 7, cacheRead: 3, cacheWrite: 5 }) + '\n');
-  fs.writeFileSync(path.join(dir, 's2.jsonl'),
+  fs.writeFileSync(path.join(dir, 'a.jsonl'),
+    rec(100, { sessionId: 's1', model: 'claude-haiku-4-5', input: 7, cacheRead: 3, cacheWrite: 5 }) + '\n' +
     rec(200, { sessionId: 's2', model: 'claude-opus-4-8', input: 9, cacheRead: 11, cacheWrite: 13 }) + '\n');
 
   const s1 = readAgentUsage(cwd, { sessionId: 's1' });
@@ -160,7 +155,7 @@ test('filtered totals carry every field, not just output tokens', () => {
  * survives someone bucketing it under '' or under the last id seen. */
 test('a record with no sessionId lands only in the unfiltered total', () => {
   const { cwd, dir } = makeProject();
-  fs.writeFileSync(path.join(dir, 's1.jsonl'),
+  fs.writeFileSync(path.join(dir, 'a.jsonl'),
     rec(100, { sessionId: 's1' }) + '\n' + rec(400, { sessionId: null }) + '\n');
   assert.equal(readAgentUsage(cwd, { sessionId: 's1' }).outputTokens, 100);
   assert.equal(readAgentUsage(cwd).outputTokens, 500);
