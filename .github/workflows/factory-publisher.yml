@@ -1,8 +1,6 @@
 name: Factory publisher
 
 on:
-  push:
-    branches: [bootstrap/publisher]
   workflow_dispatch:
     inputs:
       candidate:
@@ -18,6 +16,12 @@ on:
         required: true
         type: string
 
+      workflow_change:
+        description: Use the protected workflow-change publisher
+        required: false
+        type: boolean
+        default: false
+
 permissions:
   contents: read
   pull-requests: read
@@ -30,11 +34,10 @@ jobs:
   publish:
     if: >-
       github.repository == 'ghoussarwar-codup/software-factory-app' &&
-      ((github.event_name == 'push' && github.ref == 'refs/heads/bootstrap/publisher') ||
-       (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'))
+      github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    environment: publisher
+    environment: ${{ inputs.workflow_change && 'publisher' || 'publisher-routine' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -45,6 +48,7 @@ jobs:
         id: candidate
         shell: bash
         env:
+          WORKFLOW_CHANGE: ${{ inputs.workflow_change }}
           REQUESTED_CANDIDATE: ${{ inputs.candidate }}
           REQUESTED_TREE: ${{ inputs.tree }}
           REQUESTED_BRANCH: ${{ inputs.branch }}
@@ -52,22 +56,9 @@ jobs:
           set -euo pipefail
           git fetch --no-tags --depth=1 origin refs/heads/main
           base=$(git rev-parse FETCH_HEAD)
-          if [[ "$GITHUB_EVENT_NAME" == push ]]; then
-            reviewed=8fb4d12d4825076bb4a854bdd872b380c3f2029a
-            reviewed_tree=e576eb54da9e9f2ccad6f319c6311c77018a31bb
-            bootstrap_base=c1eac0d22eaaed73e2fbf11bcac3e9c4bca5ba25
-            [[ "$base" == "$bootstrap_base" ]]
-            git fetch --no-tags --depth=1 origin "$reviewed"
-            [[ "$(git rev-parse 'FETCH_HEAD^{tree}')" == "$reviewed_tree" ]]
-            candidate="$GITHUB_SHA"
-            tree=$(git rev-parse "$candidate^{tree}")
-            branch=bot/factory-ci
-            [[ "$(git diff --name-status "$reviewed" "$candidate")" == $'A\t.github/workflows/factory-publisher.yml' ]]
-          else
-            candidate="$REQUESTED_CANDIDATE"
-            tree="$REQUESTED_TREE"
-            branch="$REQUESTED_BRANCH"
-          fi
+          candidate="$REQUESTED_CANDIDATE"
+          tree="$REQUESTED_TREE"
+          branch="$REQUESTED_BRANCH"
 
           [[ "$candidate" =~ ^[0-9a-f]{40}$ && "$tree" =~ ^[0-9a-f]{40}$ ]]
           [[ "$branch" =~ ^bot/[a-z0-9][a-z0-9-]{0,60}$ ]]
@@ -75,9 +66,15 @@ jobs:
           git fetch --no-tags --depth=2 origin "$candidate"
           [[ "$(git rev-parse FETCH_HEAD)" == "$candidate" ]]
           [[ "$(git rev-parse "$candidate^{tree}")" == "$tree" ]]
-          if [[ "$GITHUB_EVENT_NAME" != push ]]; then
-            [[ "$(git rev-parse "$candidate^")" == "$base" ]]
-            git diff --quiet "$base" "$candidate" -- .github/workflows
+          [[ "$(git rev-parse "$candidate^")" == "$base" ]]
+          if git diff --quiet "$base" "$candidate" -- .github/workflows; then
+            if [[ "$WORKFLOW_CHANGE" == true ]]; then
+              echo 'Use routine publication for a candidate without workflow changes.' >&2
+              exit 1
+            fi
+          elif [[ "$WORKFLOW_CHANGE" != true ]]; then
+            echo 'Workflow changes require the protected publisher environment.' >&2
+            exit 1
           fi
           {
             printf 'base=%s\n' "$base"
@@ -95,36 +92,36 @@ jobs:
           repositories: software-factory-app
           permission-contents: write
           permission-pull-requests: write
-          permission-workflows: ${{ github.event_name == 'push' && 'write' || '' }}
+          permission-workflows: ${{ inputs.workflow_change && 'write' || '' }}
 
       - name: Publish verified tree and open pull request
         shell: bash
         env:
           GH_TOKEN: ${{ steps.app.outputs.token }}
           INSTALLATION_ID: ${{ steps.app.outputs.installation-id }}
+          EXPECTED_INSTALLATION: ${{ inputs.workflow_change && '186401597' || vars.FACTORY_APP_INSTALLATION_ID }}
+          BOT_LOGIN: ${{ inputs.workflow_change && 'codup-software-factory-bot[bot]' || vars.FACTORY_APP_BOT_LOGIN }}
           REVIEWED_BASE: ${{ steps.candidate.outputs.base }}
           REVIEWED_TREE: ${{ steps.candidate.outputs.tree }}
           BOT_BRANCH: ${{ steps.candidate.outputs.branch }}
         run: |
           set -euo pipefail
           repository="$GITHUB_REPOSITORY"
-          [[ "$INSTALLATION_ID" == 186401597 ]]
-          bot='codup-software-factory-bot[bot]'
+          [[ "$EXPECTED_INSTALLATION" =~ ^[0-9]+$ && "$INSTALLATION_ID" == "$EXPECTED_INSTALLATION" ]]
+          bot="$BOT_LOGIN"
+          [[ "$bot" =~ ^[a-zA-Z0-9-]+\[bot\]$ ]]
           bot_id=$(gh api "users/$bot" --jq .id)
           ref="refs/heads/$BOT_BRANCH"
           current_main() {
             git ls-remote origin refs/heads/main | cut -f1
           }
           [[ "$(current_main)" == "$REVIEWED_BASE" ]]
-          old_tip=$(git ls-remote origin "$ref" | cut -f1)
-          parents=(-p "$REVIEWED_BASE")
-          if [[ -n "$old_tip" && "$old_tip" != "$REVIEWED_BASE" ]]; then
-            git fetch --no-tags --depth=1 origin "$ref"
-            [[ "$(git rev-parse FETCH_HEAD)" == "$old_tip" ]]
-            parents+=(-p "$old_tip")
+          if [[ -n "$(git ls-remote origin "$ref")" ]]; then
+            echo 'Bot PR branches are single-use. Publish a fresh branch for a refreshed candidate.' >&2
+            exit 1
           fi
           commit=$(git -c "user.name=$bot" -c "user.email=$bot_id+$bot@users.noreply.github.com" \
-            commit-tree "$REVIEWED_TREE" "${parents[@]}" -m 'Publish reviewed Factory candidate')
+            commit-tree "$REVIEWED_TREE" -p "$REVIEWED_BASE" -m 'Publish reviewed Factory candidate')
           [[ "$(git rev-parse "$commit^{tree}")" == "$REVIEWED_TREE" ]]
           [[ "$(git rev-parse "$commit^")" == "$REVIEWED_BASE" ]]
 
@@ -138,18 +135,9 @@ jobs:
           [[ "$(git ls-remote origin "$ref" | cut -f1)" == "$commit" ]]
           [[ "$(current_main)" == "$REVIEWED_BASE" ]]
 
-          number=$(gh api --method GET "repos/$repository/pulls" -f state=open -f "head=${repository%/*}:$BOT_BRANCH" -f base=main --jq '.[0].number // empty')
-          if [[ -z "$number" ]]; then
-            title='Publish reviewed Factory candidate'
-            body="Published by the Factory GitHub App from a reviewed tree. Base: $REVIEWED_BASE. Tree: $REVIEWED_TREE."
-            if [[ "$GITHUB_EVENT_NAME" == push ]]; then
-              title='Add Factory CI and protected GitHub App publisher'
-              body="$body
-
-          Supersedes #1. The only addition to its reviewed tree is the protected publisher workflow. Fresh Factory CI and human approval are required."
-            fi
-            number=$(gh api --method POST "repos/$repository/pulls" -f "head=$BOT_BRANCH" -f base=main -f "title=$title" -f "body=$body" --jq .number)
-          fi
+          title='Publish reviewed Factory candidate'
+          body="Published by the Factory GitHub App from a reviewed tree. Base: $REVIEWED_BASE. Tree: $REVIEWED_TREE."
+          number=$(gh api --method POST "repos/$repository/pulls" -f "head=$BOT_BRANCH" -f base=main -f "title=$title" -f "body=$body" --jq .number)
           pr=$(gh api "repos/$repository/pulls/$number")
           [[ "$(jq -r .user.login <<< "$pr")" == "$bot" ]]
           [[ "$(jq -r .head.sha <<< "$pr")" == "$commit" ]]
