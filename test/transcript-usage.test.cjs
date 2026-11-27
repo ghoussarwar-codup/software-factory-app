@@ -16,7 +16,6 @@ const assert = require('node:assert');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const ts = require('typescript');
 
 // Sandbox HOME so projectDir() maps into a throwaway dir, never the user's
 // real ~/.claude/projects. os.homedir() reads $HOME/$USERPROFILE per call.
@@ -24,15 +23,7 @@ const FAKE_HOME = fs.mkdtempSync(path.join(os.tmpdir(), 'home-'));
 process.env.HOME = FAKE_HOME;
 process.env.USERPROFILE = FAKE_HOME;
 
-const SRC = path.join(__dirname, '..', 'src', 'main');
-const out = fs.mkdtempSync(path.join(os.tmpdir(), 'transcript-'));
-for (const name of ['pricing', 'transcript']) {
-  const js = ts.transpileModule(fs.readFileSync(path.join(SRC, `${name}.ts`), 'utf8'), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, esModuleInterop: true }
-  }).outputText;
-  fs.writeFileSync(path.join(out, `${name}.js`), js, 'utf8');
-}
-const { readAgentUsage, projectDir } = require(path.join(out, 'transcript.js'));
+const { readAgentUsage, projectDir } = require('./load-ts.cjs')('src/main/transcript.ts');
 
 /** A fake cwd whose projectDir we can write transcripts into. */
 function makeProject() {
@@ -60,11 +51,7 @@ function rec(output, opts = {}) {
   return JSON.stringify(r);
 }
 
-let failures = 0;
-function test(name, fn) {
-  try { fn(); console.log(`  ok  ${name}`); }
-  catch (e) { failures++; console.error(`FAIL  ${name}\n      ${e.message}`); }
-}
+const test = require('node:test');
 
 test('sums usage across records and files', () => {
   const { cwd, dir } = makeProject();
@@ -193,5 +180,3 @@ test('missing project dir yields zeros', () => {
   assert.equal(u.outputTokens, 0);
   assert.equal(u.estimatedCostUsd, 0);
 });
-
-process.exit(failures ? 1 : 0);
