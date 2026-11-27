@@ -60,6 +60,18 @@
     "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
   },
   {
+    "file": "test/breaker.test.cjs",
+    "name": "per-agent cap still trips on work tokens, and the reason names the metric",
+    "reason": "The cap message omits the expected total-token count.",
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512"
+  },
+  {
+    "file": "test/breaker.test.cjs",
+    "name": "the floor-wide token budget still counts all kinds (only the per-agent arm changed)",
+    "reason": "The breaker stays healthy after the configured floor-wide token budget is exceeded.",
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512"
+  },
+  {
     "file": "test/bundled-fonts.test.cjs",
     "name": "the app HTML no longer reaches for Google, and its CSP forbids it",
     "reason": "The input did not match the regular expression /font-src 'self';/. Input:",
@@ -370,6 +382,24 @@
     "name": "the URL branch opens only through the guarded opener, and only once",
     "reason": "the openExternal call is not behind a modifier gate",
     "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45934368264/job/140294065886"
+  },
+  {
+    "file": "test/transcript-usage.test.cjs",
+    "name": "a record with no sessionId lands only in the unfiltered total",
+    "reason": "The session-filtered total is zero instead of 100 tokens.",
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512"
+  },
+  {
+    "file": "test/transcript-usage.test.cjs",
+    "name": "filtered totals carry every field, not just output tokens",
+    "reason": "The first session does not contain the expected input, output and cache totals.",
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512"
+  },
+  {
+    "file": "test/transcript-usage.test.cjs",
+    "name": "sessionId filter sums only that session, incrementally too",
+    "reason": "The same-file fixture returns zero instead of 100 tokens for the first session.",
+    "baseline": "https://github.com/ghoussarwar-codup/software-factory-app/actions/runs/45938460512"
   },
   {
     "file": "test/update-applied.test.cjs",
