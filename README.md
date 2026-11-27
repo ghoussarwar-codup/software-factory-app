@@ -21,6 +21,10 @@ Works with Claude, ChatGPT, Grok, Gemini and more. Free and open source.
 
 <img src="./docs/screenshots/classic/floor.png" alt="The office floor: Michael, the orchestrator, and a team of agents at their desks" width="1240">
 
+## Software Factory contributions
+
+Pull requests in this fork require both Factory CI checks on the exact PR head and its combined commit with current main. A human approves and merges each PR.
+
 ## What it is
 
 Munder Difflin is a desktop app that runs a team of AI agents as an office you can watch. You hire
