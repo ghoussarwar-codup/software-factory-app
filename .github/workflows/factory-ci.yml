@@ -65,7 +65,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $tooling = git diff --name-only --diff-filter=ACMR $env:BASE_SHA HEAD -- '.github/factory-*' '.github/workflows/factory-ci.yml' 'tools/factory-*.cjs'
           if ($tooling) {
-            npx --yes prettier@3.6.2 --check --single-quote --trailing-comma none -- $tooling
+            npx --yes prettier@3.6.2 --check --single-quote --trailing-comma none --end-of-line auto -- $tooling
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           }
       - name: Install dependencies
