@@ -16,7 +16,6 @@ const assert = require('node:assert');
 const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
-const ts = require('typescript');
 
 // Sandbox HOME so projectDir() maps into a throwaway dir, never the user's
 // real ~/.claude/projects. os.homedir() reads $HOME/$USERPROFILE per call.
@@ -24,15 +23,7 @@ const FAKE_HOME = fs.mkdtempSync(path.join(os.tmpdir(), 'home-'));
 process.env.HOME = FAKE_HOME;
 process.env.USERPROFILE = FAKE_HOME;
 
-const SRC = path.join(__dirname, '..', 'src', 'main');
-const out = fs.mkdtempSync(path.join(os.tmpdir(), 'transcript-'));
-for (const name of ['pricing', 'transcript']) {
-  const js = ts.transpileModule(fs.readFileSync(path.join(SRC, `${name}.ts`), 'utf8'), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, esModuleInterop: true }
-  }).outputText;
-  fs.writeFileSync(path.join(out, `${name}.js`), js, 'utf8');
-}
-const { readAgentUsage, projectDir } = require(path.join(out, 'transcript.js'));
+const { readAgentUsage, projectDir } = require('./load-ts.cjs')('src/main/transcript.ts');
 
 /** A fake cwd whose projectDir we can write transcripts into. */
 function makeProject() {
@@ -60,11 +51,7 @@ function rec(output, opts = {}) {
   return JSON.stringify(r);
 }
 
-let failures = 0;
-function test(name, fn) {
-  try { fn(); console.log(`  ok  ${name}`); }
-  catch (e) { failures++; console.error(`FAIL  ${name}\n      ${e.message}`); }
-}
+const test = require('node:test');
 
 test('sums usage across records and files', () => {
   const { cwd, dir } = makeProject();
@@ -88,9 +75,10 @@ test('appended records are picked up (incremental tail parse)', () => {
 test('repeat reads with no change are stable', () => {
   const { cwd, dir } = makeProject();
   fs.writeFileSync(path.join(dir, 'a.jsonl'), rec(100) + '\n');
-  const a = readAgentUsage(cwd);
-  const b = readAgentUsage(cwd);
-  assert.deepEqual(b, a);
+  const { asOf: firstReadAt, ...first } = readAgentUsage(cwd);
+  const { asOf: secondReadAt, ...second } = readAgentUsage(cwd);
+  assert.deepEqual(second, first);
+  assert.ok(secondReadAt >= firstReadAt);
 });
 
 test('a partial trailing line is not counted until completed', () => {
@@ -123,10 +111,13 @@ test('a deleted file drops out of the totals', () => {
 
 test('sessionId filter sums only that session, incrementally too', () => {
   const { cwd, dir } = makeProject();
-  const f = path.join(dir, 'a.jsonl');
-  fs.writeFileSync(f, rec(100, { sessionId: 's1' }) + '\n' + rec(999, { sessionId: 's2' }) + '\n');
+  const s1 = path.join(dir, 's1.jsonl');
+  const s2 = path.join(dir, 's2.jsonl');
+  fs.writeFileSync(s1, rec(100, { sessionId: 's1' }) + '\n');
+  fs.writeFileSync(s2, rec(999, { sessionId: 's2' }) + '\n');
   assert.equal(readAgentUsage(cwd, { sessionId: 's1' }).outputTokens, 100);
-  fs.appendFileSync(f, rec(11, { sessionId: 's1' }) + '\n' + rec(888, { sessionId: 's2' }) + '\n');
+  fs.appendFileSync(s1, rec(11, { sessionId: 's1' }) + '\n');
+  fs.appendFileSync(s2, rec(888, { sessionId: 's2' }) + '\n');
   assert.equal(readAgentUsage(cwd, { sessionId: 's1' }).outputTokens, 111);
   assert.equal(readAgentUsage(cwd, { sessionId: 's2' }).outputTokens, 1887);
   assert.equal(readAgentUsage(cwd).outputTokens, 1998, 'unfiltered still sums everything');
@@ -137,12 +128,13 @@ test('sessionId filter sums only that session, incrementally too', () => {
  * a field that lands in the unfiltered total but not in the session bucket is
  * invisible to an outputTokens assertion — the totals still look right, only
  * the per-agent numbers are silently short, and nothing else contradicts them.
- * One file, two sessions, distinct models and distinct cache read/write counts
+ * Two session files, distinct models and distinct cache read/write counts
  * so a swap between them cannot cancel out. */
 test('filtered totals carry every field, not just output tokens', () => {
   const { cwd, dir } = makeProject();
-  fs.writeFileSync(path.join(dir, 'a.jsonl'),
-    rec(100, { sessionId: 's1', model: 'claude-haiku-4-5', input: 7, cacheRead: 3, cacheWrite: 5 }) + '\n' +
+  fs.writeFileSync(path.join(dir, 's1.jsonl'),
+    rec(100, { sessionId: 's1', model: 'claude-haiku-4-5', input: 7, cacheRead: 3, cacheWrite: 5 }) + '\n');
+  fs.writeFileSync(path.join(dir, 's2.jsonl'),
     rec(200, { sessionId: 's2', model: 'claude-opus-4-8', input: 9, cacheRead: 11, cacheWrite: 13 }) + '\n');
 
   const s1 = readAgentUsage(cwd, { sessionId: 's1' });
@@ -168,7 +160,7 @@ test('filtered totals carry every field, not just output tokens', () => {
  * survives someone bucketing it under '' or under the last id seen. */
 test('a record with no sessionId lands only in the unfiltered total', () => {
   const { cwd, dir } = makeProject();
-  fs.writeFileSync(path.join(dir, 'a.jsonl'),
+  fs.writeFileSync(path.join(dir, 's1.jsonl'),
     rec(100, { sessionId: 's1' }) + '\n' + rec(400, { sessionId: null }) + '\n');
   assert.equal(readAgentUsage(cwd, { sessionId: 's1' }).outputTokens, 100);
   assert.equal(readAgentUsage(cwd).outputTokens, 500);
@@ -193,5 +185,3 @@ test('missing project dir yields zeros', () => {
   assert.equal(u.outputTokens, 0);
   assert.equal(u.estimatedCostUsd, 0);
 });
-
-process.exit(failures ? 1 : 0);

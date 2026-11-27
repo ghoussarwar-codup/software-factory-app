@@ -7,17 +7,13 @@ const os = require('node:os');
 const path = require('node:path');
 const loadTs = require('./load-ts.cjs');
 
-// config.ts resolves its file through Electron's app.getPath(). Point that one
-// dependency at a throwaway userData root so this test never touches the real
-// application config.
+// Register the same host adapter as Electron using an isolated fixture.
 const userData = fs.mkdtempSync(path.join(os.tmpdir(), 'md-config-notify-'));
-const electron = require.resolve('electron');
-require.cache[electron] = {
-  id: electron,
-  filename: electron,
-  loaded: true,
-  exports: { app: { getPath: () => userData } }
-};
+const { setOfficePaths } = loadTs('src/core/paths.ts');
+setOfficePaths({
+  userData: () => userData,
+  bundled: name => path.join(userData, name)
+});
 
 const { writeConfig, readConfig, onConfigWritten, setAgentTokenCap, resetConfig } = loadTs('src/main/config.ts');
 

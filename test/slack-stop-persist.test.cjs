@@ -19,16 +19,7 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-let failures = 0;
-function test(name, fn) {
-  try {
-    fn();
-    console.log(`  ✓ ${name}`);
-  } catch (err) {
-    failures++;
-    console.log(`  ✗ ${name}\n     ${err.message}`);
-  }
-}
+const test = require('node:test');
 
 const src = fs.readFileSync(path.join(__dirname, '..', 'src/main/index.ts'), 'utf8');
 
@@ -74,8 +65,3 @@ test('the lifecycle teardowns do not clear the flag', () => {
     );
   }
 });
-
-if (failures > 0) {
-  console.log(`\n${failures} test(s) failed`);
-  process.exit(1);
-}

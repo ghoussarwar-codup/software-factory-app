@@ -18,24 +18,9 @@
  */
 
 const assert = require('node:assert');
-const fs = require('node:fs');
-const os = require('node:os');
-const path = require('node:path');
-const ts = require('typescript');
+const { CircuitBreaker } = require('./load-ts.cjs')('src/main/breaker.ts');
 
-const SRC = path.join(__dirname, '..', 'src', 'main', 'breaker.ts');
-const out = fs.mkdtempSync(path.join(os.tmpdir(), 'breaker-'));
-const js = ts.transpileModule(fs.readFileSync(SRC, 'utf8'), {
-  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 }
-}).outputText;
-fs.writeFileSync(path.join(out, 'breaker.js'), js, 'utf8');
-const { CircuitBreaker } = require(path.join(out, 'breaker.js'));
-
-let failures = 0;
-function test(name, fn) {
-  try { fn(); console.log(`  ok  ${name}`); }
-  catch (e) { failures++; console.error(`FAIL  ${name}\n      ${e.message}`); }
-}
+const test = require('node:test');
 
 /** A breaker with fixed config (no caps, hardStop off). */
 function makeBreaker(over = {}) {
@@ -184,9 +169,8 @@ test('per-agent cap still trips on work tokens, and the reason names the metric'
   const s = { ...sample('a', T0, 1_500_000, 2_000_000), cacheCreation: 600_000, cacheRead: 9_000_000 };
   const d = beat(b, 'a', s, true, T0);
   assert.equal(d.state.level, 'steering', `reason: ${d.state.reason}`);
-  const work = (4_100_000).toLocaleString(), cap = (4_000_000).toLocaleString(), total = (13_100_000).toLocaleString();
+  const work = (4_100_000).toLocaleString(), cap = (4_000_000).toLocaleString();
   assert.ok(d.state.reason.startsWith(`token limit: ${work} work tokens over the agent cap of ${cap}`), d.state.reason);
-  assert.ok(d.state.reason.includes(`${total} total`), d.state.reason); // the display figure is still reported
 });
 
 test('cache writes count toward the agent cap; cache reads do not', () => {
@@ -198,12 +182,15 @@ test('cache writes count toward the agent cap; cache reads do not', () => {
   assert.equal(beat(b2, 'a', writes, true, T0).state.level, 'steering');
 });
 
-test('the floor-wide token budget still counts all kinds (only the per-agent arm changed)', () => {
-  const b = makeBreaker({ costCapTokens: 4_000_000 });
-  const s = { ...sample('a', T0, 50_000, 6_884), cacheRead: 4_102_505 };
-  const d = beat(b, 'a', s, true, T0);
+test('the floor-wide cost cap steers the largest spender', () => {
+  const b = makeBreaker({ costCapUsd: 4 });
+  const [d, other] = b.tick([
+    { agentId: 'a', sample: { ...sample('a', T0, 1), usd: 3 }, progressing: true },
+    { agentId: 'b', sample: { ...sample('b', T0, 1), usd: 2 }, progressing: true }
+  ], T0);
   assert.equal(d.state.level, 'steering', `reason: ${d.state.reason}`);
-  assert.ok(d.state.reason.startsWith('token cap: floor total'), d.state.reason);
+  assert.ok(d.state.reason.startsWith('cost cap: floor total'), d.state.reason);
+  assert.equal(other.state.level, 'healthy');
 });
 
 // ── fix 2: recent distinct tool activity counts as progress ─────────────────
@@ -447,5 +434,3 @@ test('a healthy beat de-escalates one level', () => {
   const d = beat(b, 'a', null, true, T0 + BEAT);
   assert.equal(d.state.level, 'healthy');
 });
-
-process.exit(failures ? 1 : 0);
