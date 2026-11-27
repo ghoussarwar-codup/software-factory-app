@@ -55,10 +55,10 @@ jobs:
           if [[ "$GITHUB_EVENT_NAME" == push ]]; then
             [[ "$base" == 6da823adc487993e26c7a844a6872532839253c3 ]]
             git read-tree "$base"
-            git update-index --force-remove -- .github/workflows/factory-baseline-evidence.yml .github/workflows/pr-evidence.yml
+            git update-index --force-remove -- .github/workflows/factory-baseline-evidence.yml .github/workflows/pr-evidence.yml test/pr-evidence-gate.test.cjs
             tree=$(git write-tree)
             branch=bot/factory-workflow-cleanup
-            expected=$'D\t.github/workflows/factory-baseline-evidence.yml\nD\t.github/workflows/pr-evidence.yml'
+            expected=$'D\t.github/workflows/factory-baseline-evidence.yml\nD\t.github/workflows/pr-evidence.yml\nD\ttest/pr-evidence-gate.test.cjs'
             [[ "$(git diff --name-status "$base" "$tree")" == "$expected" ]]
           else
             candidate="$REQUESTED_CANDIDATE"
