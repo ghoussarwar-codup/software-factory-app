@@ -49,3 +49,45 @@ jobs:
         run: npm run typecheck
       - name: Unit and integration tests
         run: npm run test:focused
+
+  baseline-evidence:
+    name: Factory baseline evidence
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: candidate
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: c1eac0d22eaaed73e2fbf11bcac3e9c4bca5ba25
+          path: baseline
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install unchanged baseline dependencies
+        working-directory: baseline
+        run: npm ci
+      - name: Record unchanged baseline test failures
+        working-directory: baseline
+        shell: pwsh
+        run: |
+          $sha = git rev-parse HEAD
+          if ($sha -ne 'c1eac0d22eaaed73e2fbf11bcac3e9c4bca5ba25') {
+            throw 'Baseline checkout does not match the pinned commit.'
+          }
+          $reporter = Join-Path $env:GITHUB_WORKSPACE 'candidate/tools/factory-baseline-reporter.cjs'
+          node --test --test-reporter $reporter 'test/*.test.cjs' |
+            Set-Content -Encoding utf8 "${env:RUNNER_TEMP}/factory-baseline-failures.jsonl"
+          $testExit = $LASTEXITCODE
+          if ($testExit -gt 1) { exit $testExit }
+          if ($testExit -eq 1 -and !(Get-Content "${env:RUNNER_TEMP}/factory-baseline-failures.jsonl" -TotalCount 1)) {
+            throw 'Baseline test run failed without structured failure records.'
+          }
+          exit 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: factory-baseline-failures
+          path: ${{ runner.temp }}/factory-baseline-failures.jsonl
+          if-no-files-found: error
